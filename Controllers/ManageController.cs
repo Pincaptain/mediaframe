@@ -18,12 +18,14 @@ namespace Mediaframe.Controllers
 
         public ManageController()
         {
+            Database = new ApplicationDbContext();
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            Database = new ApplicationDbContext();
         }
 
         public ApplicationSignInManager SignInManager
@@ -50,6 +52,8 @@ namespace Mediaframe.Controllers
             }
         }
 
+        public ApplicationDbContext Database { get; set; }
+
         //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
@@ -72,7 +76,12 @@ namespace Mediaframe.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
-            return View(model);
+            ProfileViewModel updatedModel = new ProfileViewModel();
+            updatedModel.Details = model;
+            updatedModel.User = UserManager.FindById(userId);
+            updatedModel.Profile = Database.Profiles.Where(p => p.AccountId == userId).First();
+
+            return View(updatedModel);
         }
 
         //

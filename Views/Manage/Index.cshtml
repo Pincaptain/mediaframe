@@ -1,13 +1,10 @@
-﻿@model Mediaframe.Models.IndexViewModel
+﻿@model Mediaframe.Models.ProfileViewModel
 @{
     ViewBag.Title = "Manage";
 }
 
 <div class="container" id="manage-main">
     <div class="row">
-        <div class="col-2">
-
-        </div>
         <div class="col-4">
             <div class="container manage-main-info">
 
@@ -22,17 +19,20 @@
                         <dt class="d-inline">Password:</dt>
                         <dd class="d-inline">
                             [
-                            @if (Model.HasPassword) {
-                        @Html.ActionLink("Change your password", "ChangePassword")
-            } else {
-                @Html.ActionLink("Create", "SetPassword")
-    }
+                                @if (Model.Details.HasPassword)
+                                {
+                                    @Html.ActionLink("Change your password", "ChangePassword")
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Create", "SetPassword")
+                                }
                             ]
                         </dd>
                         <br />
                         <dt class="d-inline">External Logins:</dt>
                         <dd class="d-inline">
-                            @Model.Logins.Count [
+                            @Model.Details.Logins.Count [
                             @Html.ActionLink("Manage", "ManageLogins") ]
                         </dd>
                         @*
@@ -100,37 +100,64 @@
                     <br />
 
                     <!-- UserName Here-->
-                    <h3 class="text-center">User Name</h3>
+                    <h3 class="text-center">@Model.User.Email</h3>
                     <hr />
 
                     <div class="text-center">
                         <!-- Image URL Here-->
-                        <img class="img" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                        @if (string.IsNullOrEmpty(Model.Profile.Avatar))
+                        {
+                            <img class="img" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                        }
+                        else
+                        {
+                            <img class="img" src="@Model.Profile.Avatar" />
+                        }
                     </div>
                     <br />
 
                     <p class="d-inline"><b>Name:</b></p>
 
                     <!-- Name Here-->
-                    <p class="d-inline">Example</p>
+                    <p class="d-inline">@Model.Profile.Name</p>
 
                     <br />
                     <br />
                     <p class="d-inline"><b>Surname:</b></p>
 
                     <!-- Surname Here-->
-                    <p class="d-inline">Example</p>
+                    <p class="d-inline">@Model.Profile.Surname</p>
                     <br />
                     <br />
                     <p class="d-inline"><b>Email:</b></p>
 
                     <!-- Email Here-->
-                    <p class="d-inline">Example</p>
+                    <p class="d-inline">@Model.User.Email</p>
                 </div>
 
             </div>
-            <div class="col-2">
-
+            <div class="col-4">
+                @using (Html.BeginForm("EditProfile", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Profile.Name)
+                        @Html.TextBoxFor(m => m.Profile.Name, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Profile.Surname)
+                        @Html.TextBoxFor(m => m.Profile.Surname, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Profile.Avatar)
+                        @Html.TextBoxFor(m => m.Profile.Avatar, new { @class = "form-control" })
+                    </div>
+                    @Html.HiddenFor(m => m.Profile.Id)
+                    @Html.HiddenFor(m => m.User.Id)
+                    <button class="btn btn-default">
+                        Change
+                    </button>
+                }
             </div>
         </div>
     </div>
