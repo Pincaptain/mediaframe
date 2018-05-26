@@ -3,13 +3,11 @@
     ViewBag.Title = "Register";
 }
 
-<div class="container">
-    <h2>@ViewBag.Title.</h2>
-
+<div class="container" style="margin-top: 60px; color:rgba(0,0,0,.6); background-color: #f8f9fa; border: 1px solid darkgray; padding: 30px;">
     @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <h4>Create a new account.</h4>
+        <h4>Create a new account</h4>
         <hr />
         @Html.ValidationSummary("", new { @class = "text-danger" })
         <div class="form-group">
@@ -37,6 +35,11 @@
         </div>
     }
 </div>
+<footer>
+    <nav class="navbar fixed-bottom navbar-light bg-light" style="margin-top: 60px; text-align: center; display: block; border-bottom:0; border-top: 1px solid darkgrey;">
+        <a class="navbar-brand" style="font-size: 16px;">© 2018 Mediaframe Inc. All Rights Reserved</a>
+    </nav>
+</footer>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
