@@ -21,3 +21,12 @@ nav {
     border-bottom: 1px solid darkgray;
     background-color: black;
 }
+
+#about-us-main br {
+    user-select: none;
+}
+
+#about-us-main h3 {
+    font-family: "Montserrat", sans-serif;
+    color: #666666;
+}
