@@ -22,6 +22,12 @@ nav {
     background-color: black;
 }
 
+#about-us-main {
+    background-color: #f8f9fa;
+    border: 1px solid darkgray;
+    margin-top: 50px;
+}
+
 #about-us-main br {
     user-select: none;
 }
