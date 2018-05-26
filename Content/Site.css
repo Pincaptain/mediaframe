@@ -35,3 +35,12 @@ nav {
     font-family: "Montserrat", sans-serif;
     color: #666666;
 }
+
+#manage-main {
+    margin-top: 50px;
+}
+
+#manage-main-info {
+    background-color: #f8f9fa;
+    border: 1px solid darkgray;
+}
