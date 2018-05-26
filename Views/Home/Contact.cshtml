@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+
+<div class="container body-content">
+    <div class="row" style="background-color: #f8f9fa; border: 1px solid darkgray; padding: 30px;">
+        <div class="col-md-4" style="text-align:center;color:rgba(0,0,0,.6)">
+            <i style="color: #b20000" class="fa fa-map-marker fa-5x"></i>
+            <h2>Address</h2>
+            <hr />
+            <h5>Finki Address</h5>
+            <p>Rugjer Boshkovikj 16, Skopje 1000</p>
+            <h5>Mediaframe Address</h5>
+            <p>Rugjer Boshkovikj 16, Skopje 1000</p>
+        </div>
+        <div class="col-md-4" style="text-align:center;color:rgba(0,0,0,.6)">
+            <i style="color: #00a0e5" class="fa fa-phone fa-5x"></i>
+            <h2>Phone</h2>
+            <hr />
+            <h5>Finki Phone</h5>
+            <p>+985 23756874</p>
+            <h5>Mediaframe Phone</h5>
+            <p>+985 56845654</p>
+        </div>
+        <div class="col-md-4" style="text-align:center;color:rgba(0,0,0,.6)">
+            <i style="color: darkorange" class="fa fa-envelope fa-5x"></i>
+            <h2>Mail</h2>
+            <hr />
+            <h5>Finki Mail</h5>
+            <p>getme@@finki.ukim.mk</p>
+            <h5>Mediaframe Mail</h5>
+            <p>getmemore@@students.finki.ukim.mk</p>
+        </div>
+    </div>
+    <div class="row" style="background-color: #f8f9fa; border: 1px solid darkgray; margin-top:60px;">
+        <div id="map" class="col-md-6" style="width: 100%; height: 500px;"></div>
+        <div class="col-md-6" style="padding-top:25px; padding-bottom: 25px;">
+            <form>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="password" class="form-control" id="inputPassword4" placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <textarea style="max-width: 100%" class="form-control" placeholder="Message" rows="14"></textarea>
+                    </div>
+                </div>
+                <button style="max-width: 100%; width:100%;" type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer>
+    <nav class="navbar navbar-light bg-light" style="margin-top: 60px; text-align: center; display: block; border-bottom:0; border-top: 1px solid darkgrey;">
+        <a class="navbar-brand" style="font-size: 16px;">© 2018 Mediaframe Inc. All Rights Reserved</a>
+    </nav>
+</footer>
+
+@section scripts {
+
+<script>
+    function initMap() {
+        var finki = { lat: 42.0038231, lng: 21.4093348};
+      var map = new google.maps.Map(
+          document.getElementById('map'), {zoom: 18, center: finki});
+      var marker = new google.maps.Marker({position: finki, map: map});
+    }
+</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXiotmwARGgeimeNkmrE9uaBzNmcYrozg&callback=initMap">
+</script>
+    }
