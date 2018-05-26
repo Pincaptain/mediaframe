@@ -20,12 +20,14 @@ namespace Mediaframe.Controllers
 
         public AccountController()
         {
+            Database = new ApplicationDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            Database = new ApplicationDbContext();
         }
 
         public ApplicationSignInManager SignInManager
@@ -51,6 +53,8 @@ namespace Mediaframe.Controllers
                 _userManager = value;
             }
         }
+
+        public ApplicationDbContext Database { get; set; }
 
         //
         // GET: /Account/Login
@@ -156,12 +160,20 @@ namespace Mediaframe.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    var profile = new User()
+                    {
+                        AccountId = user.Id
+                    };
+
+                    Database.Profiles.Add(profile);
+                    Database.SaveChanges();
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -393,6 +405,21 @@ namespace Mediaframe.Controllers
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProfile(ProfileViewModel model)
+        {
+            var profile = Database.Profiles.Find(model.Profile.Id);
+
+            profile.Name = model.Profile.Name;
+            profile.Surname = model.Profile.Surname;
+            profile.Avatar = model.Profile.Avatar;
+
+            Database.SaveChanges();
+
+            return RedirectToAction("Index", "Manage", new { });
         }
 
         //

@@ -193,9 +193,24 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805252147112_InitialCreate.cs" />
+    <Compile Include="Migrations\201805252147112_InitialCreate.Designer.cs">
+      <DependentUpon>201805252147112_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805262228158_Profiles.cs" />
+    <Compile Include="Migrations\201805262228158_Profiles.Designer.cs">
+      <DependentUpon>201805262228158_Profiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805262309292_OneToManyUsers.cs" />
+    <Compile Include="Migrations\201805262309292_OneToManyUsers.Designer.cs">
+      <DependentUpon>201805262309292_OneToManyUsers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ProfileViewModel.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -322,6 +337,17 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201805252147112_InitialCreate.resx">
+      <DependentUpon>201805252147112_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805262228158_Profiles.resx">
+      <DependentUpon>201805262228158_Profiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805262309292_OneToManyUsers.resx">
+      <DependentUpon>201805262309292_OneToManyUsers.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
