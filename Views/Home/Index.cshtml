@@ -54,7 +54,14 @@
                     <div class="col-3">
 
                         <!-- Image URL Here-->
-                        <img style="margin-top: 13px" class="rounded-circle d-inline" width="70" height="70" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                        @if (string.IsNullOrEmpty(Model.User.Avatar))
+                        {
+                            <img style="margin-top: 13px" class="rounded-circle d-inline" width="70" height="70" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                        }
+                        else
+                        {
+                            <img style="margin-top: 13px" class="rounded-circle d-inline" width="70" height="70" src="@Model.User.Avatar" />
+                        }
 
                     </div>
 

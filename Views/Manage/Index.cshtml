@@ -108,11 +108,11 @@
                         <!-- Image URL Here-->
                         @if (string.IsNullOrEmpty(Model.Profile.Avatar))
                         {
-                            <img class="img" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                            <img class="img img-fluid" width="128" height="128" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
                         }
                         else
                         {
-                            <img class="img" src="@Model.Profile.Avatar" />
+                            <img class="img img-fluid" src="@Model.Profile.Avatar" />
                         }
                     </div>
                     <br />
@@ -155,7 +155,7 @@
                     </div>
                     @Html.HiddenFor(m => m.Profile.Id)
                     @Html.HiddenFor(m => m.User.Id)
-                    <button class="btn btn-default">
+                    <button class="btn btn-secondary">
                         Change
                     </button>
                 }
