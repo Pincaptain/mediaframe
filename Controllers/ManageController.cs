@@ -76,10 +76,25 @@ namespace Mediaframe.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
-            ProfileViewModel updatedModel = new ProfileViewModel();
-            updatedModel.Details = model;
-            updatedModel.User = UserManager.FindById(userId);
-            updatedModel.Profile = Database.Profiles.Where(p => p.AccountId == userId).First();
+            var updatedModel = new ProfileViewModel()
+            {
+                Details = model,
+                User = UserManager.FindById(userId),
+                Profile = Database.Profiles.FirstOrDefault(p => p.AccountId == userId)
+            };
+
+            if (updatedModel.Profile == null)
+            {
+                var newProfile = new User()
+                {
+                    AccountId = userId
+                };
+
+                Database.Profiles.Add(newProfile);
+                Database.SaveChanges();
+
+                updatedModel.Profile = newProfile;
+            }
 
             return View(updatedModel);
         }
