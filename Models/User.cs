@@ -28,5 +28,8 @@ namespace Mediaframe.Models
 
         public string AccountId { get; set; }
         public virtual ApplicationUser Account { get; set; }
+
+        public virtual List<User> Following { get; set; }
+        public virtual List<User> Followers { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Mediaframe.Models.HomeViewModel
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -17,16 +18,21 @@
                             <!-- Image URL Here-->
                             <img class="rounded-circle d-inline" width="40" height="40" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
                         </div>
+                        <!-- Post user username-->
                         <p class="align-self-center text-muted" style="margin:0;"><strong>bokiboki@@gmail.com</strong></p>
                     </div>
                 </div>
                 <div class="card-body" style="padding:0;">
+                    <!-- Post image -->
                     <img class="card-img-top" style="border-radius:0;" src="https://usercontent1.hubstatic.com/8573904_f496.jpg" alt="Card image cap">
                 </div>
                 <div class="card-footer text-muted">
                     <button class="btn btn-primary" style="padding-left:20px; padding-right:20px;">Like</button>
                     <button class="btn btn-secondary" style="padding-left:20px; padding-right:20px;">Comment</button>
+                    <!-- Likes and comments count -->
+                    <span class="text-right" style="width:100%; margin-left:20%">24 Likes 23 Comments</span>
                     <hr />
+                    <!-- Comments List -->
                     <ul style="margin:0; list-style:none; padding:0;">
                         <li style="padding:0;"><strong>bokiboki@@gmail.com</strong> This is my newest project!</li>
                     </ul>
@@ -52,16 +58,16 @@
 
                     </div>
 
-                    <div class="col-9">
+                    <div class="col-9" style="margin-top:20px;">
 
                         <!-- Username Here-->
-                        <h3 style="margin: 25px 0px 0px 10px">User Name</h3>
+                        <h6" style="margin: 25px 0px 0px 10px">@Model.User.Account.Email</h6">
 
                         <!-- Firstname Here-->
-                        <p style="margin-left: 11px;" class="d-inline">Example</p>
+                        <p style="margin-left: 11px;" class="d-inline">@Model.User.Name</p>
 
                         <!-- Surname Here-->
-                        <p class="d-inline">Example</p>
+                        <p class="d-inline">@Model.User.Surname</p>
                     </div>
 
                 </div>
@@ -74,20 +80,28 @@
 
                     <!-- List of Friends -->
 
+                    @foreach (var user in Model.Suggested)
+                    {
                         <div class="row">
                             <div class="col-3">
-
                                 <!-- Image URL Here-->
-                                <img style="margin-top: 13px" class="rounded-circle d-inline" width="50" height="50" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
-
+                                @if (string.IsNullOrEmpty(user.Avatar))
+                                {
+                                    <img style="margin-top: 13px" class="rounded-circle d-inline" width="50" height="50" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                                }
+                                else
+                                {
+                                    <img style="margin-top: 13px" class="rounded-circle d-inline" width="50" height="50" src="@user.Avatar" />
+                                }
                             </div>
 
-                            <div class="col-9">
-
+                            <div class="col-9" style="margin-top:5px;">
                                 <!-- Username Here-->
-                                <h5 style="margin: 25px 0px 0px 0px">User Name</h5>
+                                <h6>@user.Account.Email</h6>
+                                <button class="btn btn-primary btn-sm">Follow</button>
                             </div>
                         </div>
+                    }
 
                     <!-- End of List of Friends-->
 
