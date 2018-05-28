@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Mediaframe.Models;
+using System.Web.Script.Serialization;
 
 namespace Mediaframe.Controllers
 {
@@ -420,6 +421,36 @@ namespace Mediaframe.Controllers
             Database.SaveChanges();
 
             return RedirectToAction("Index", "Manage", new { });
+        }
+
+        public JsonResult FollowProfile(int id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Json("");
+            }
+
+            var userId = UserManager.FindByName(User.Identity.Name).Id;
+            var user = Database.Profiles.FirstOrDefault(u => u.AccountId == userId);
+            var follow = Database.Profiles.FirstOrDefault(u => u.Id == id);
+
+            if (user.Following.Contains(follow))
+            {
+                return Json("");
+            }
+
+            user.Following.Add(follow);
+            follow.Followers.Add(user);
+
+            Database.SaveChanges();
+
+            var response = new JavaScriptSerializer().Serialize(new { followers = user.Followers.Count, following = user.Following.Count });
+
+            return Json(new
+            {
+                followers = user.Followers.Count,
+                following = user.Following.Count,
+            }, JsonRequestBehavior.AllowGet);
         }
 
         //

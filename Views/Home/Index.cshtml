@@ -65,7 +65,7 @@
 
                     </div>
 
-                    <div class="col-9" style="margin-top:20px;">
+                    <div class="col-9" style="margin-top:12px;">
 
                         <!-- Username Here-->
                         <h6" style="margin: 25px 0px 0px 10px">@Model.User.Account.Email</h6">
@@ -75,44 +75,59 @@
 
                         <!-- Surname Here-->
                         <p class="d-inline">@Model.User.Surname</p>
+
+                        <!-- Followers and Following-->
+                        <p style="margin-left: 11px;">
+                            <span style="border-right: 1px solid darkgray; margin-right:5px;">
+                                Following <span id="following-count">@Model.User.Following.Count</span>
+                            </span>
+                            <span>
+                                Followers <span id="followers-count">@Model.User.Followers.Count</span>
+                            </span>
+                        </p>
                     </div>
 
                 </div>
 
-                <hr />
+                @if (Model.Suggested.Count > 0)
+                {
+                    <div id="suggested-friends">
+                        <hr />
 
-                <h5>Suggested friends</h5>
+                        <h5>Suggested friends</h5>
 
-                <div class="container" style="padding-bottom: 20px">
+                        <div class="container" style="padding-bottom: 20px">
 
-                    <!-- List of Friends -->
+                            <!-- List of Friends -->
 
-                    @foreach (var user in Model.Suggested)
-                    {
-                        <div class="row">
-                            <div class="col-3">
-                                <!-- Image URL Here-->
-                                @if (string.IsNullOrEmpty(user.Avatar))
-                                {
-                                    <img style="margin-top: 13px" class="rounded-circle d-inline" width="50" height="50" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
-                                }
-                                else
-                                {
-                                    <img style="margin-top: 13px" class="rounded-circle d-inline" width="50" height="50" src="@user.Avatar" />
-                                }
-                            </div>
+                            @foreach (var user in Model.Suggested)
+                            {
+                                <div class="row suggested-friend">
+                                    <div class="col-3">
+                                        <!-- Image URL Here-->
+                                        @if (string.IsNullOrEmpty(user.Avatar))
+                                        {
+                                            <img style="margin-top: 13px" class="rounded-circle d-inline" width="50" height="50" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                                        }
+                                        else
+                                        {
+                                            <img style="margin-top: 13px" class="rounded-circle d-inline" width="50" height="50" src="@user.Avatar" />
+                                        }
+                                    </div>
 
-                            <div class="col-9" style="margin-top:5px;">
-                                <!-- Username Here-->
-                                <h6>@user.Account.Email</h6>
-                                <button class="btn btn-primary btn-sm">Follow</button>
-                            </div>
+                                    <div class="col-9" style="margin-top:5px;">
+                                        <!-- Username Here-->
+                                        <h6>@user.Account.Email</h6>
+                                        <button id="@user.Id" class="btn btn-primary btn-sm follow-button">Follow</button>
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- End of List of Friends-->
+
                         </div>
-                    }
-
-                    <!-- End of List of Friends-->
-
-                </div>
+                    </div>
+                }
             </div>
             
 
@@ -125,3 +140,34 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".follow-button").click(function () {
+                var button = $(this);
+                $.ajax({
+                    url: "/Account/FollowProfile/" + button.attr("id"),
+                    method: "GET",
+                    success: function (response) {
+                        button.parent().parent().remove();
+
+                        var followers = $("#followers-count");
+                        var following = $("#following-count");
+
+                        following.html(response["following"]);
+                        followers.html(response["followers"]);
+
+                        var suggestedFriends = $(".suggested-friend");
+
+                        if (suggestedFriends.length == 0) {
+                            var suggestedContainer = $("#suggested-friends");
+
+                            suggestedContainer.remove();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    }
