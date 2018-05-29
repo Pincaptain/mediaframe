@@ -423,11 +423,11 @@ namespace Mediaframe.Controllers
             return RedirectToAction("Index", "Manage", new { });
         }
 
-        public JsonResult FollowProfile(int id)
+        public ActionResult FollowProfile(int id)
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return Json("");
+                return HttpNotFound();
             }
 
             var userId = UserManager.FindByName(User.Identity.Name).Id;
@@ -436,11 +436,41 @@ namespace Mediaframe.Controllers
 
             if (user.Following.Contains(follow))
             {
-                return Json("");
+                return HttpNotFound();
             }
 
             user.Following.Add(follow);
             follow.Followers.Add(user);
+
+            Database.SaveChanges();
+
+            var response = new JavaScriptSerializer().Serialize(new { followers = user.Followers.Count, following = user.Following.Count });
+
+            return Json(new
+            {
+                followers = user.Followers.Count,
+                following = user.Following.Count,
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UnfollowProfile(int id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return HttpNotFound();
+            }
+
+            var userId = UserManager.FindByName(User.Identity.Name).Id;
+            var user = Database.Profiles.FirstOrDefault(u => u.AccountId == userId);
+            var unfollow = Database.Profiles.FirstOrDefault(u => u.Id == id);
+
+            if (!user.Following.Contains(unfollow))
+            {
+                return HttpNotFound();
+            }
+
+            user.Following.Remove(unfollow);
+            unfollow.Followers.Remove(user);
 
             Database.SaveChanges();
 

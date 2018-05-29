@@ -94,71 +94,130 @@
                 </div>
             </div>
             </div>
-            <div class="col-4">
+            <div class="col-8 manage-main-info" style="padding: 30px;">
+                <div class="row">
+                    <div class="col-6">
+                        <div style="padding-bottom:15px;">
+                            @if (string.IsNullOrEmpty(Model.Profile.Avatar))
+                            {
+                                <img class="img img-fluid" width="128" height="128" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                            }
+                            else
+                            {
+                                <img class="img img-fluid" src="@Model.Profile.Avatar" />
+                            }
+                        </div>
 
-                <div class="container manage-main-info" style="padding-bottom: 20px">
-                    <br />
-
-                    <!-- UserName Here-->
-                    <h3 class="text-center">@Model.User.Email</h3>
-                    <hr />
-
-                    <div class="text-center">
-
-                        <!-- Image URL Here-->
-                        @if (string.IsNullOrEmpty(Model.Profile.Avatar))
+                        @using (Html.BeginForm("EditProfile", "Account", FormMethod.Post))
                         {
-                            <img class="img img-fluid" width="128" height="128" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
-                        }
-                        else
-                        {
-                            <img class="img img-fluid" src="@Model.Profile.Avatar" />
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Profile.Name)
+                                @Html.TextBoxFor(m => m.Profile.Name, new { @class = "form-control", placeholder = "Name" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Profile.Surname)
+                                @Html.TextBoxFor(m => m.Profile.Surname, new { @class = "form-control", placeholder = "Surname" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Profile.Avatar)
+                                @Html.TextBoxFor(m => m.Profile.Avatar, new { @class = "form-control", placeholder = "Image URL" })
+                            </div>
+                            @Html.HiddenFor(m => m.Profile.Id)
+                            @Html.HiddenFor(m => m.User.Id)
+                            <button class="btn btn-secondary">
+                                Change
+                            </button>
                         }
                     </div>
-                    <br />
-
-                    <p class="d-inline"><b>Name:</b></p>
-
-                    <!-- Name Here-->
-                    <p class="d-inline">@Model.Profile.Name</p>
-
-                    <br />
-                    <br />
-                    <p class="d-inline"><b>Surname:</b></p>
-
-                    <!-- Surname Here-->
-                    <p class="d-inline">@Model.Profile.Surname</p>
-                    <br />
-                    <br />
-                    <p class="d-inline"><b>Email:</b></p>
-
-                    <!-- Email Here-->
-                    <p class="d-inline">@Model.User.Email</p>
+                    <div class="col-6">
+                        <h4>Account @Model.User.Email </h4>
+                        <hr />
+                        <button class="btn btn-secondary" data-toggle="modal" data-target="#modal-following" style="width:100%; margin-bottom:15px;">Following <span id="following-count" class="badge badge-info">@Model.Profile.Following.Count</span></button>
+                        <button class="btn btn-secondary" data-toggle="modal" data-target="#modal-followers" style="width:100%;">Followers <span id="followers-count" class="badge badge-info">@Model.Profile.Followers.Count</span></button>
+                        <div class="modal fade bd-example-modal-lg" id="modal-following" tabindex="-1" role="dialog" aria-labelledby="modal-followingCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modal-followingCenterTitle">Following</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" style="overflow-y:scroll; height:400px;">
+                                        <div id="following-users">
+                                            @foreach(var user in Model.Profile.Following)
+                                            {
+                                                <div id="user-@user.Id" class="row" style="margin-bottom:15px;">
+                                                    <div class="col-2">
+                                                        @if (string.IsNullOrEmpty(user.Avatar))
+                                                        {
+                                                            <img class="img rounded-circle" width="50" height="50" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img class="img rounded-circle" width="50" height="50" src="@user.Avatar" />
+                                                        }
+                                                    </div>
+                                                    <div class="col-3 align-items-lg-start">
+                                                        <span>@user.Account.Email</span>
+                                                        <span>@user.Name @user.Surname</span>
+                                                    </div>
+                                                    <div class="col-7 text-right">
+                                                        <button id="following-unfollow-@user.Id" title="@user.Id" class="btn btn-secondary unfollow-button">Unfollow</button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade bd-example-modal-lg" id="modal-followers" tabindex="-1" role="dialog" aria-labelledby="modal-followersCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modal-followersCenterTitle">Followers</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" style="overflow-y:scroll; height:400px;">
+                                        @foreach (var user in Model.Profile.Followers)
+                                        {
+                                            <div class="row" style="margin-bottom:15px;">
+                                                <div class="col-2">
+                                                    @if (string.IsNullOrEmpty(user.Avatar))
+                                                    {
+                                                        <img class="img rounded-circle" width="50" height="50" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img class="img rounded-circle" width="50" height="50" src="@user.Avatar" />
+                                                    }
+                                                </div>
+                                                <div class="col-3 align-items-lg-start">
+                                                    <span>@user.Account.Email</span>
+                                                    <span>@user.Name @user.Surname</span>
+                                                </div>
+                                                <div class="col-7 text-right">
+                                                    @if (user.Followers.Contains(Model.Profile))
+                                                    {
+                                                        <button id="followers-unfollow-@user.Id" title="@user.Id" class="btn btn-secondary unfollow-button">Unfollow</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button id="followers-follow-@user.Id" title="@user.Id" class="btn btn-secondary follow-button">Follow</button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-            </div>
-            <div class="col-4">
-                @using (Html.BeginForm("EditProfile", "Account", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Profile.Name)
-                        @Html.TextBoxFor(m => m.Profile.Name, new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Profile.Surname)
-                        @Html.TextBoxFor(m => m.Profile.Surname, new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Profile.Avatar)
-                        @Html.TextBoxFor(m => m.Profile.Avatar, new { @class = "form-control" })
-                    </div>
-                    @Html.HiddenFor(m => m.Profile.Id)
-                    @Html.HiddenFor(m => m.User.Id)
-                    <button class="btn btn-secondary">
-                        Change
-                    </button>
-                }
             </div>
         </div>
     </div>
@@ -168,3 +227,81 @@
         <a class="navbar-brand" style="font-size: 16px;">© 2018 Mediaframe Inc. All Rights Reserved</a>
     </nav>
 </footer>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".unfollow-button").click(function () {
+                unfollow($(this));
+            });
+
+            $(".follow-button").click(function () {
+                follow($(this));
+            });
+        });
+
+        function follow(button) {
+            $.ajax({
+                url: "/Account/FollowProfile/" + button.attr("title"),
+                method: "GET",
+                success: function (response) {
+                    var userId = button.attr("title");
+
+                    var followerButton = $("#followers-follow-" + userId);
+
+                    followerButton.html("Unfollow");
+                    followerButton.removeClass("follow-button");
+                    followerButton.addClass("unfollow-button");
+                    followerButton.attr("id", "followers-unfollow-" + userId);
+                    followerButton.click(function () {
+                        unfollow($(this));
+                    });
+
+                    $("#following-users").append("<div id='temp' class='row' style='margin-bottom:15px;'>" + followerButton.parent().parent().html() + "</div>");
+
+                    var newUser = $("#temp");
+
+                    newUser.find("button").attr("id", "following-unfollow-" + userId);
+                    newUser.find("button").click(function () {
+                        unfollow($(this));
+                    });
+
+                    var followersCount = $("#followers-count");
+                    var followingCount = $("#following-count");
+
+                    followersCount.html(response["followers"]);
+                    followingCount.html(response["following"]);
+                }
+            });
+        }
+
+        function unfollow(button) {
+            $.ajax({
+                url: "/Account/UnfollowProfile/" + button.attr("title"),
+                method: "GET",
+                success: function (response) {
+                    var userId = button.attr("title");
+
+                    var followerButton = $("#followers-unfollow-" + userId);
+                    var followingButton = $("#following-unfollow-" + userId);
+
+                    followingButton.parent().parent().remove();
+
+                    followerButton.html("Follow");
+                    followerButton.removeClass("unfollow-button");
+                    followerButton.addClass("follow-button");
+                    followerButton.attr("id", "followers-follow-" + userId);
+                    followerButton.click(function () {
+                        follow($(this));
+                    });
+
+                    var followersCount = $("#followers-count");
+                    var followingCount = $("#following-count");
+
+                    followersCount.html(response["followers"]);
+                    followingCount.html(response["following"]);
+                }
+            });
+        }
+    </script>
+    }

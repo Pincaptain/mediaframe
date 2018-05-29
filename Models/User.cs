@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mediaframe.Models
 {
@@ -31,5 +32,10 @@ namespace Mediaframe.Models
 
         public virtual List<User> Following { get; set; }
         public virtual List<User> Followers { get; set; }
+
+        public virtual List<Comment> Comments { get; set; }
+
+        public virtual List<Post> Posts { get; set; }
+        public virtual List<Post> LikedPosts { get; set; }
     }
 }

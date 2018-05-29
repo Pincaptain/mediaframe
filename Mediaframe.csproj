@@ -219,11 +219,18 @@
     <Compile Include="Migrations\201805272241570_FollowingAndFollowers.Designer.cs">
       <DependentUpon>201805272241570_FollowingAndFollowers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805292220047_Posts.cs" />
+    <Compile Include="Migrations\201805292220047_Posts.Designer.cs">
+      <DependentUpon>201805292220047_Posts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\PostLike.cs" />
     <Compile Include="Models\ProfileViewModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserFollower.cs" />
@@ -367,6 +374,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805272241570_FollowingAndFollowers.resx">
       <DependentUpon>201805272241570_FollowingAndFollowers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805292220047_Posts.resx">
+      <DependentUpon>201805292220047_Posts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
