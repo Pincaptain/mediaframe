@@ -11,35 +11,65 @@
         </div>
 
         <div>
-            <div class="card" style="border-radius:0; border: 1px solid darkgray; background-color:#f8f9fa; margin-bottom:60px;">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-2">
-                            <!-- Image URL Here-->
-                            <img class="rounded-circle d-inline" width="40" height="40" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+            <div style="border-radius:0; border: 1px solid darkgray; background-color:#f8f9fa; padding:30px;">
+                <h4 class="text-muted" style="margin-bottom:15px;">New Post</h4>
+                @using (Html.BeginForm())
+                {
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.NewPost.ImageUrl, new { @class = "form-control", style = "width:100%; max-width:100%", placeholder = "Add Image URL..." })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextAreaFor(m => m.NewPost.Description, new { @class = "form-control", style = "width:100%; max-width:100%", placeholder = "Add Description..." })
+                    </div>
+                    <button type="submit" class="btn btn-info" style="max-width:100%; width:100%;">
+                        Post
+                    </button>
+                }
+            </div>
+            <hr />
+            @foreach (var post in Model.Posts)
+            {
+                <div class="card" style="border-radius:0; border: 1px solid darkgray; background-color:#f8f9fa; margin-bottom:60px;">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-2">
+                                <!-- Image URL Here-->
+                                @if (string.IsNullOrEmpty(Model.User.Avatar))
+                                {
+                                    <img class="rounded-circle d-inline" width="40" height="40" src="https://vignette.wikia.nocookie.net/micronations/images/4/41/No-Avatar-High-Definition.jpg" />
+                                }
+                                else
+                                {
+                                    <img class="rounded-circle d-inline" width="40" height="40" src="@post.User.Avatar" />
+                                }
+                            </div>
+                            <!-- Post user username-->
+                            <p class="align-self-center text-muted" style="margin:0;"><strong>@post.User.Account.Email</strong></p>
                         </div>
-                        <!-- Post user username-->
-                        <p class="align-self-center text-muted" style="margin:0;"><strong>bokiboki@@gmail.com</strong></p>
+                    </div>
+                    <div class="card-body" style="padding:0;">
+                        <!-- Post image -->
+                        <img class="card-img-top" style="border-radius:0; max-width:500px; max-height:500px;" src="@post.ImageUrl" alt="Card image cap">
+                    </div>
+                    <div class="card-footer text-muted">
+                        <button class="btn btn-primary" style="padding-left:20px; padding-right:20px;">Like</button>
+                        <button class="btn btn-secondary" style="padding-left:20px; padding-right:20px;">Comment</button>
+                        <!-- Likes and comments count -->
+                        <span class="text-right" style="width:100%; margin-left:20%">@post.Likes.Count Likes @post.Comments.Count Comments</span>
+                        <hr />
+                        <!-- Comments List -->
+                        <ul style="margin:0; list-style:none; padding:0;">
+                            <li style="padding:0;"><strong>@post.User.Account.Email</strong> @post.Description</li>
+                            @foreach (var comment in post.Comments)
+                            {
+                                <li style="padding:0;"><strong>@comment.User.Account.Email</strong> @comment.Content</li>
+                            }
+                        </ul>
+                        <hr />
+                        <input type="text" class="form-control" style="width:100%; max-width:100%;" placeholder="Add a comment..." />
                     </div>
                 </div>
-                <div class="card-body" style="padding:0;">
-                    <!-- Post image -->
-                    <img class="card-img-top" style="border-radius:0;" src="https://usercontent1.hubstatic.com/8573904_f496.jpg" alt="Card image cap">
-                </div>
-                <div class="card-footer text-muted">
-                    <button class="btn btn-primary" style="padding-left:20px; padding-right:20px;">Like</button>
-                    <button class="btn btn-secondary" style="padding-left:20px; padding-right:20px;">Comment</button>
-                    <!-- Likes and comments count -->
-                    <span class="text-right" style="width:100%; margin-left:20%">24 Likes 23 Comments</span>
-                    <hr />
-                    <!-- Comments List -->
-                    <ul style="margin:0; list-style:none; padding:0;">
-                        <li style="padding:0;"><strong>bokiboki@@gmail.com</strong> This is my newest project!</li>
-                    </ul>
-                    <hr />
-                    <input type="text" class="form-control" style="width:100%; max-width:100%;" placeholder="Add a comment..." />
-                </div>
-            </div>
+            }
         </div>
 
         <div class="col-1">

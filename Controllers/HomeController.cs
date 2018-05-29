@@ -39,7 +39,35 @@ namespace Mediaframe.Controllers
                 .Take(10)
                 .ToList();
 
+            model.Posts = Database.Posts
+                .ToList();
+
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Index(HomeViewModel model)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account", new { });
+            }
+
+            if (string.IsNullOrEmpty(model.NewPost.ImageUrl))
+            {
+                return View(model);
+            }
+
+            var userId = Database.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
+            var profile = Database.Profiles.FirstOrDefault(p => p.AccountId == userId);
+
+            model.NewPost.UserId = profile.Id;
+            model.NewPost.User = profile;
+
+            Database.Posts.Add(model.NewPost);
+            Database.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         public ActionResult About()

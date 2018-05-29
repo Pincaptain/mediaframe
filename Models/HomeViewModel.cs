@@ -9,5 +9,7 @@ namespace Mediaframe.Models
     {
         public User User { get; set; }
         public List<User> Suggested { get; set; }
+        public List<Post> Posts { get; set; }
+        public Post NewPost { get; set; }
     }
 }
