@@ -52,13 +52,13 @@
                         <img class="card-img-top" style="border-radius:0; max-width:500px; max-height:500px;" src="@post.ImageUrl" alt="Card image cap">
                     </div>
                     <div class="card-footer text-muted">
-                        <button class="btn btn-primary" style="padding-left:20px; padding-right:20px;">Like</button>
-                        <button class="btn btn-secondary" style="padding-left:20px; padding-right:20px;">Comment</button>
+                        <button class="btn btn-primary like-button" style="padding-left:20px; padding-right:20px;">Like</button>
+                        <button class="btn btn-secondary comment-button" id="@post.Id" style="padding-left:20px; padding-right:20px;">Comment</button>
                         <!-- Likes and comments count -->
-                        <span class="text-right" style="width:100%; margin-left:20%">@post.Likes.Count Likes @post.Comments.Count Comments</span>
+                        <span class="text-right" style="width:100%; margin-left:20%"><span>@post.Likes.Count</span> Likes <span id="comments-count-@post.Id">@post.Comments.Count</span> Comments</span>
                         <hr />
                         <!-- Comments List -->
-                        <ul style="margin:0; list-style:none; padding:0;">
+                        <ul style="margin:0; list-style:none; padding:0;" id="comments-@post.Id">
                             <li style="padding:0;"><strong>@post.User.Account.Email</strong> @post.Description</li>
                             @foreach (var comment in post.Comments)
                             {
@@ -66,7 +66,7 @@
                             }
                         </ul>
                         <hr />
-                        <input type="text" class="form-control" style="width:100%; max-width:100%;" placeholder="Add a comment..." />
+                        <input id="new-comment-@post.Id" style="width:100%; max-width:100%;" type="text" class="form-control" placeholder="Add a comment..." />
                     </div>
                 </div>
             }
@@ -199,6 +199,34 @@
                     }
                 });
             });
+
+            $(".comment-button").click(function () {
+                comment($(this));
+            });
         });
+
+        function like(button) {
+
+        }
+
+        function dislike(button) {
+
+        }
+
+        function comment(button) {
+            var id = button.attr("id");
+            var inputForm = $("#new-comment-" + id)
+            var commentsContainer = $("#comments-" + id);
+            var value = inputForm.val();
+            inputForm.val("");
+            $.ajax({
+                url: "/Posts/NewComment/" + button.attr("id") + "?comment=" + value,
+                method: "GET",
+                success: function (response) {
+                    commentsContainer.append("<li style='padding:0;'><strong>" + "@Model.User.Account.Email" + "</strong> " + response["commentContent"] + "</li>");
+                    $("#comments-count-" + id).html(response["comments"]);
+                }
+            });
+        }
     </script>
     }
