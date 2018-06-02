@@ -56,5 +56,63 @@ namespace Mediaframe.Controllers
             return Json(new { comments = post.Comments.Count, commentContent = comment.Content, commentUser = comment.User.Account.Email},
                 JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult LikePost(int id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return HttpNotFound();
+            }
+
+            var userId = Database.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
+            var profile = Database.Profiles.FirstOrDefault(p => p.AccountId == userId);
+            var post = Database.Posts.FirstOrDefault(p => p.Id == id);
+
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (post.Likes.Contains(profile))
+            {
+                return HttpNotFound();
+            }
+
+            post.Likes.Add(profile);
+
+            Database.SaveChanges();
+
+            return Json(new { likes = post.Likes.Count },
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DislikePost(int id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return HttpNotFound();
+            }
+
+            var userId = Database.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
+            var profile = Database.Profiles.FirstOrDefault(p => p.AccountId == userId);
+            var post = Database.Posts.FirstOrDefault(p => p.Id == id);
+
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (!post.Likes.Contains(profile))
+            {
+                return HttpNotFound();
+            }
+
+            post.Likes.Remove(profile);
+
+            Database.SaveChanges();
+
+            return Json(new { likes = post.Likes.Count },
+                JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -52,10 +52,17 @@
                         <img class="card-img-top" style="border-radius:0; max-width:500px; max-height:500px;" src="@post.ImageUrl" alt="Card image cap">
                     </div>
                     <div class="card-footer text-muted">
-                        <button class="btn btn-primary like-button" style="padding-left:20px; padding-right:20px;">Like</button>
+                        @if (!post.Likes.Contains(Model.User))
+                        {
+                            <button class="btn btn-primary like-button" id="@post.Id" style="padding-left:20px; padding-right:20px;">Like</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary dislike-button" id="@post.Id" style="padding-left:20px; padding-right:20px;">Dislike</button>
+                        }
                         <button class="btn btn-secondary comment-button" id="@post.Id" style="padding-left:20px; padding-right:20px;">Comment</button>
                         <!-- Likes and comments count -->
-                        <span class="text-right" style="width:100%; margin-left:20%"><span>@post.Likes.Count</span> Likes <span id="comments-count-@post.Id">@post.Comments.Count</span> Comments</span>
+                        <span class="text-right" style="width:100%; margin-left:20%"><span id="likes-count-@post.Id">@post.Likes.Count</span> Likes <span id="comments-count-@post.Id">@post.Comments.Count</span> Comments</span>
                         <hr />
                         <!-- Comments List -->
                         <ul style="margin:0; list-style:none; padding:0;" id="comments-@post.Id">
@@ -203,14 +210,54 @@
             $(".comment-button").click(function () {
                 comment($(this));
             });
+
+            $(".like-button").click(function () {
+                like($(this));
+            });
+
+            $(".dislike-button").click(function () {
+                dislike($(this));
+            });
         });
 
         function like(button) {
+            var id = button.attr("id");
+            var postLikes = $("#likes-count-" + id); 
 
+            button.addClass("button-dislike");
+            button.removeClass("button-like");
+            button.html("Dislike");
+            button.click(function () {
+                dislike($(this));
+            });
+
+            $.ajax({
+                url: "Posts/LikePost/" + id,
+                method: "GET",
+                success: function (response) {
+                    postLikes.html(response["likes"]);
+                }
+            });
         }
 
         function dislike(button) {
+            var id = button.attr("id");
+            var postLikes = $("#likes-count-" + id);
 
+            button.addClass("button-like");
+            button.removeClass("button-dislike");
+            button.html("Like");
+            button.click(function () {
+                like($(this));
+            });
+
+            $.ajax({
+                url: "Posts/DislikePost/" + id,
+                method: "GET",
+                success: function (response) {
+                    postLikes.html(response["likes"]);
+                }
+            });
         }
 
         function comment(button) {

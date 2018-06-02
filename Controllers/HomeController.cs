@@ -40,6 +40,7 @@ namespace Mediaframe.Controllers
                 .ToList();
 
             model.Posts = Database.Posts
+                .Where(p => p.User.Followers.FirstOrDefault(f => f.Id == model.User.Id) != null)
                 .ToList();
 
             return View(model);
